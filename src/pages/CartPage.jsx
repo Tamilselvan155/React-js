@@ -1,13 +1,20 @@
 // import React from "react";
 // import { useCart } from "../context/CartContext";
 
+
+
 // const CartPage = () => {
-//   const { cartItems, removeItemCompletely } = useCart();
+//   const { cartItems, removeItemCompletely, clearCart } = useCart();
 
 //   const totalPrice = cartItems.reduce(
 //     (total, item) => total + item.price * item.quantity,
 //     0
 //   );
+
+//   const handleCheckout = () => {
+//     alert("Proceeding to checkout...");
+//     // You can replace this with navigation or payment logic
+//   };
 
 //   return (
 //     <div className="p-8 bg-gray-100 min-h-screen">
@@ -41,10 +48,26 @@
 //             </div>
 //           ))}
 
-//           <div className="text-right mt-6">
+//           <div className="text-right mt-6 space-y-4">
 //             <h3 className="text-xl font-bold">
 //               Total: ${totalPrice.toFixed(2)}
 //             </h3>
+
+//             {/* Clear Cart & Checkout Buttons */}
+//             <div className="flex justify-end gap-4">
+//               <button
+//                 onClick={clearCart}
+//                 className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+//               >
+//                 Clear Cart
+//               </button>
+//               <button
+//                 onClick={handleCheckout}
+//                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+//               >
+//                 Proceed to Checkout
+//               </button>
+//             </div>
 //           </div>
 //         </div>
 //       )}
@@ -58,10 +81,14 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
 
-
-
 const CartPage = () => {
-  const { cartItems, removeItemCompletely, clearCart } = useCart();
+  const {
+    cartItems,
+    removeItemCompletely,
+    clearCart,
+    increaseQuantity,
+    decreaseQuantity,
+  } = useCart();
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -70,7 +97,6 @@ const CartPage = () => {
 
   const handleCheckout = () => {
     alert("Proceeding to checkout...");
-    // You can replace this with navigation or payment logic
   };
 
   return (
@@ -94,7 +120,21 @@ const CartPage = () => {
               <div className="ml-4 flex-1">
                 <h2 className="text-lg font-semibold">{item.title}</h2>
                 <p className="text-gray-600">Price: ${item.price.toFixed(2)}</p>
-                <p className="text-gray-600">Quantity: {item.quantity}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <button
+                    onClick={() => decreaseQuantity(item.id)}
+                    className="bg-gray-200 text-xl px-3 rounded hover:bg-gray-300"
+                  >
+                    −
+                  </button>
+                  <span className="px-2">{item.quantity}</span>
+                  <button
+                    onClick={() => increaseQuantity(item.id)}
+                    className="bg-gray-200 text-xl px-3 rounded hover:bg-gray-300"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
               <button
                 onClick={() => removeItemCompletely(item.id)}
@@ -109,8 +149,6 @@ const CartPage = () => {
             <h3 className="text-xl font-bold">
               Total: ${totalPrice.toFixed(2)}
             </h3>
-
-            {/* Clear Cart & Checkout Buttons */}
             <div className="flex justify-end gap-4">
               <button
                 onClick={clearCart}

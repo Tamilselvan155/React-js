@@ -41,9 +41,20 @@
 //     setCartItems((prev) => prev.filter((item) => item.id !== id));
 //   };
 
+//   // ✅ NEW: Clear Cart
+//   const clearCart = () => {
+//     setCartItems([]); // This will empty the entire cart
+//   };
+
 //   return (
 //     <CartContext.Provider
-//       value={{ cartItems, addToCart, removeFromCart, removeItemCompletely }}
+//       value={{
+//         cartItems,
+//         addToCart,
+//         removeFromCart,
+//         removeItemCompletely,
+//         clearCart, // ✅ Don't forget to provide it here
+//       }}
 //     >
 //       {children}
 //     </CartContext.Provider>
@@ -51,7 +62,6 @@
 // };
 
 // export const useCart = () => useContext(CartContext);
-
 
 import React, { createContext, useContext, useState } from "react";
 
@@ -96,9 +106,28 @@ export const CartProvider = ({ children }) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // ✅ NEW: Clear Cart
   const clearCart = () => {
-    setCartItems([]); // This will empty the entire cart
+    setCartItems([]);
+  };
+
+  // ✅ NEW: Increase Quantity
+  const increaseQuantity = (id) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  // ✅ NEW: Decrease Quantity
+  const decreaseQuantity = (id) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
   };
 
   return (
@@ -108,7 +137,9 @@ export const CartProvider = ({ children }) => {
         addToCart,
         removeFromCart,
         removeItemCompletely,
-        clearCart, // ✅ Don't forget to provide it here
+        clearCart,
+        increaseQuantity,
+        decreaseQuantity,
       }}
     >
       {children}
